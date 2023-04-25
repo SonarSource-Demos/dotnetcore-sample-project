@@ -1,0 +1,5 @@
+.sonarqube/
+bin/
+.vs/
+.DS_Store
+obj/

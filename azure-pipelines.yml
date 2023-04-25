@@ -1,0 +1,32 @@
+trigger:
+- main
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+  solution: '**/*.sln'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+
+steps:
+
+# Prepare Analysis Configuration task
+- task: SonarQubePrepare@5
+  inputs:
+    SonarQube: 'joshua-sonarqube' # SonarQube service connection id (found in Azure DevOps)
+    scannerMode: 'MSBuild'
+    projectKey: 'dotnetcore-azuredevops_dotnetcore-azuredevops_AYbAf9qWAu8T8ZieRlfh'
+    projectName: 'dotnetcore-sonar-azuredevops'
+
+# Dotnet build task
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet build'
+
+# Run Code Analysis task
+- task: SonarQubeAnalyze@5
+
+# Publish Quality Gate Result task
+- task: SonarQubePublish@5
+  inputs:
+    pollingTimeoutSec: '300'
